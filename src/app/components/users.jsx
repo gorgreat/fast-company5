@@ -92,7 +92,7 @@ const Users = () => {
 };
 
 Users.propTypes = {
-    users: PropTypes.array.isRequired
+    users: PropTypes.array
 };
 
 export default Users;

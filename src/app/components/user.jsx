@@ -6,7 +6,6 @@ import QualitiesList from "./qualitiesList";
 const User = ({
     _id,
     name,
-    qualities,
     profession,
     completedMeetings,
     rate,
