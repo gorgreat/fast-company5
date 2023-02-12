@@ -7,6 +7,7 @@ import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
 import _ from "lodash";
 import UserTable from "./usersTable";
+import SearchInput from "./searchInput";
 
 const Users = () => {
     const pageSize = 8;
@@ -15,6 +16,12 @@ const Users = () => {
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [users, setUsers] = useState();
+    const [searchText, setSearchResult] = useState("");
+
+    const handleSearch = ({ target }) => {
+        setSearchResult(target.value);
+        setSelectedProf(undefined);
+    };
 
     useEffect(() => {
         API.users.fetchAll().then((data) =>
@@ -45,11 +52,12 @@ const Users = () => {
     };
 
     const handleProfessionsSelect = (item) => {
+        if (searchText !== "") setSearchResult("");
         setSelectedProf(item);
     };
 
-    const handleReset = (item) => {
-        setSelectedProf(item);
+    const handleReset = () => {
+        setSelectedProf();
     };
 
     useEffect(() => {
@@ -59,10 +67,15 @@ const Users = () => {
 
     useEffect(() => {
         setCurrentPage(1);
-    }, [selectedProf]);
+    }, [selectedProf, setSearchResult]);
 
     if (users) {
-        const filteredUsers = selectedProf && selectedProf._id ? users.filter((user) => _.isEqual(user.profession, selectedProf)) : users;
+        const filteredUsers = searchText
+            ? users.filter((user) => user.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
+            : selectedProf
+                ? users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
+                : users;
+
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
@@ -75,20 +88,21 @@ const Users = () => {
                         <button onClick={handleReset} className="btn btn-primary mt-2">Очистить</button>
                     </div>
                 }
-                {count > 0 && (
-                    <div className="d-flex flex-column">
-                        <SearchStatus length={count} />
+                <div className="d-flex flex-column">
+                    <SearchStatus length={count} />
+                    <SearchInput value={searchText} onSearch={handleSearch} />
+                    {count > 0 && <>
                         <UserTable users={userCrop} onSort={handleSort} selectedSort={sortBy} onDelete={handleDelete} onToggleBookMark={handleToggleBookMark} />
                         <div className="d-flex">
                             <Pagination currentPage={currentPage} itemsCount={count} pageSize={pageSize} onPageChange={handlePageChange} />
                         </div>
-                    </div>
-                )}
-
+                    </>
+                    }
+                </div>
             </div>
         );
     };
-    return "loading...";
+    return "Загрузка...";
 };
 
 Users.propTypes = {
