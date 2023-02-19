@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
+import { paginate } from "../../../utils/paginate";
+import Pagination from "../../common/pagination";
 import PropTypes from "prop-types";
-import API from "../api";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
+import API from "../../../api";
+import GroupList from "../../common/groupList";
+import SearchStatus from "../../ui/searchStatus";
 import _ from "lodash";
-import UserTable from "./usersTable";
-import SearchInput from "./searchInput";
+import UserTable from "../../ui/usersTable";
+import SearchInput from "../../searchInput";
 
-const Users = () => {
+const UsersListPage = () => {
     const pageSize = 8;
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfessions] = useState();
@@ -27,6 +27,10 @@ const Users = () => {
         API.users.fetchAll().then((data) =>
             setUsers(data));
     }, []);
+
+    useEffect(() => {
+        console.log("весь список", users);
+    });
 
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
@@ -105,8 +109,8 @@ const Users = () => {
     return "Загрузка...";
 };
 
-Users.propTypes = {
+UsersListPage.propTypes = {
     users: PropTypes.array
 };
 
-export default Users;
+export default UsersListPage;

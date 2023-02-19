@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import API from "../api";
+import API from "../../../api";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const UserPage = ({ id }) => {
     const history = useHistory();
@@ -15,6 +15,7 @@ const UserPage = ({ id }) => {
     const handleBack = () => {
         history.push("/users");
     };
+
     return <>
         {userInfo
             ? <div>
@@ -26,7 +27,8 @@ const UserPage = ({ id }) => {
             </div>
             : "Loading..."
         }
-        <button className="btn btn-secondary" onClick={() => handleBack()}>К списку пользователей</button>
+        <button className="btn btn-secondary mx-2" onClick={() => handleBack()}>К списку пользователей</button>
+        <Link to={`/users/${id}/edit`} className="btn btn-primary">Редактировать</Link>
     </>;
 };
 
