@@ -28,10 +28,6 @@ const UsersListPage = () => {
             setUsers(data));
     }, []);
 
-    useEffect(() => {
-        console.log("весь список", users);
-    });
-
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
