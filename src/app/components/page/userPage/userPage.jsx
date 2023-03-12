@@ -1,39 +1,41 @@
 import React, { useEffect, useState } from "react";
 import API from "../../../api";
 import PropTypes from "prop-types";
-import { Link, useHistory } from "react-router-dom";
+import UserCard from "../../ui/userCard";
+import QualitiesCard from "../../ui/qualitiesCard";
+import MeetingsCard from "../../ui/meetingsCard";
+import Comments from "../../ui/comments";
 
-const UserPage = ({ id }) => {
-    const history = useHistory();
-    const [userInfo, setUserInfo] = useState();
+const UserPage = ({ userId }) => {
+    const [user, setUser] = useState();
 
     useEffect(() => {
-        API.users.getById(id).then((data) =>
-        setUserInfo(data));
+        API.users.getById(userId).then((data) =>
+        setUser(data));
     }, []);
 
-    const handleBack = () => {
-        history.push("/users");
-    };
-
     return <>
-        {userInfo
-            ? <div>
-                <h1>{userInfo.name}</h1>
-                <p>Количество встреч: {userInfo.completedMeetings}</p>
-                <p>Профессия: {userInfo.profession.name}</p>
-                <p>Рейтинг: {userInfo.rate}</p>
-                <p>Качества: {userInfo.qualities.map((item) => (<span key={item._id} className={"badge m-1 bg-" + item.color}>{item.name}</span>)) }</p>
+        {user
+            ? <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 mb-3">
+                        <UserCard user={user} />
+                        <QualitiesCard data={user.qualities} />
+                        <MeetingsCard data={user.completedMeetings} />
+                    </div>
+
+                    <div className="col-md-8">
+                        <Comments />
+                    </div>
+                </div>
             </div>
-            : "Loading..."
+            : "Загрузка..."
         }
-        <button className="btn btn-secondary mx-2" onClick={() => handleBack()}>К списку пользователей</button>
-        <Link to={`/users/${id}/edit`} className="btn btn-primary">Редактировать</Link>
     </>;
 };
 
 UserPage.propTypes = {
-    id: PropTypes.string
+    userId: PropTypes.string
 };
 
 export default UserPage;

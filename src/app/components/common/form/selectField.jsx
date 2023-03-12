@@ -19,7 +19,7 @@ const SelectField = ({ label, value, onChange, defaultOption, options, error, na
             <label htmlFor={name} className="form-label">{label}</label>
             <select className={getInputClasses()} id={name} name={name} value={value} onChange={handleChange}>
                 <option disabled value="">{defaultOption}</option>
-                {optionsArray && optionsArray.map(item => <option key={item._id}>{item.label}</option>)}
+                {optionsArray && optionsArray.map(item => <option key={item.value}>{item.label}</option>)}
             </select>
             {error && <div className="invalid-feedback">{error}</div>}
         </div>
